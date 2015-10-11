@@ -8,12 +8,25 @@ typedef vector < vector<int> > VECTOR;
 //goal state for 8 puzzle
 const VECTOR GOAL = { {1, 2, 3}, {4, 5, 6}, {7, 8, 0} };
 
+void PRINT(VECTOR x)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			cout << x.at(i).at(j);
+		}
+		cout << endl;
+	}
+}
+
 //node structure
 struct node
 {
 	VECTOR x;
 	int uniform_cost;
 	int heuristic_cost;
+	bool goal = true;
 	node* child1 = NULL;
 	node* child2 = NULL; 
 	node* child3 = NULL;
@@ -31,10 +44,14 @@ struct node
 		uniform_cost = uc;
 		heuristic_cost = hc;
 	};
+	void print()
+	{
+		PRINT(x);	
+	}
 };
 
 //search tree
-list <node> TREE; 
+vector <node> TREE; 
 //visited nodes
 vector <node> VISITED;
 
@@ -42,7 +59,8 @@ VECTOR swap(VECTOR x, int a, int b, int c, int d)
 {
 	int z = x.at(c).at(d);
 	x.at(a).at(b) = z;
-	x.at(c).at(b) = 0;
+	x.at(c).at(d) = 0;
+	cout << "SWAPPED " << z << endl;
 	return x;
 }
 
@@ -169,32 +187,63 @@ void make_tree (node x)
 	VISITED.push_back(x.x);
 	if (x.x == GOAL)
 	{
+		x.goal = true;
+		cout << "GOAL FOUND" << endl;
+		cout << "Uniform cost = " << x.uniform_cost << endl;
 		return;
 	}
 
 	node n1 (operator_up(x.x), x.uniform_cost + 1, 0);
+	n1.print();
+	cout << endl;
 	node n2 (operator_down(x.x), x.uniform_cost + 1, 0);
+	n2.print();
+	cout << endl;
 	node n3 (operator_left(x.x), x.uniform_cost + 1, 0);
+	n3.print();
+	cout << endl;
 	node n4 (operator_right(x.x), x.uniform_cost + 1, 0);
-	
-	if (n1.x != x.x && !already_visited(n1.x)) {x.child1 = &n1; make_tree(x.child1);}
-	if (n2.x != x.x && !already_visited(n2.x)) {x.child2 = &n2; make_tree(x.child2);}
-	if (n3.x != x.x && !already_visited(n3.x)) {x.child3 = &n3; make_tree(x.child3);}
-	if (n4.x != x.x && !already_visited(n4.x)) {x.child3 = &n4; make_tree(x.child4);}
+	n4.print();
+	cout << endl;
+
+	if (n1.x != x.x && !already_visited(n1.x)) {x.child1 = &n1; make_tree(*x.child1);}
+	if (n2.x != x.x && !already_visited(n2.x)) {x.child2 = &n2; make_tree(*x.child2);}
+	if (n3.x != x.x && !already_visited(n3.x)) {x.child3 = &n3; make_tree(*x.child3);}
+	if (n4.x != x.x && !already_visited(n4.x)) {x.child3 = &n4; make_tree(*x.child4);}
+
+	cout << "END" << endl;
+}
+
+void goal_check()
+{
+	for (int i = 0; i < TREE.size(); i++)
+	{
+		if (TREE.at(i).goal)
+		{
+			return;
+		}
+	}
+	TREE.clear();
 }
 
 //general searching algorithm 
-bool GENERAL_SEARCH(VECTOR x, list <node> (*QUEUING)())
+bool GENERAL_SEARCH(VECTOR x)//, list <node> (*QUEUING)())
 {
-	make_tree(x);	
-	
+	make_tree(node(x));	
+	goal_check();
+
 	if (TREE.empty())
 	{
 		cout << "There is no solution";
 		return false;
 	}
-
-	while (true)
+	
+	for (int i = 0; i < TREE.size(); i++)
+	{
+		//TREE.at(i).print();
+		//cout << endl;
+	}
+	//while (true)
 	{
 		
 	}
@@ -227,9 +276,6 @@ int main()
 		cout << "Enter the third row, separate numbers by hitting enter" << endl;
 		cin >> g >> h >> i;
 	}
-	cout << a << b << c << endl;
-	cout << d << e << f << endl;
-	cout << g << h << i << endl;
 	vector <int> input;
 	input.push_back(a); input.push_back(b); input.push_back(c);
 	input.push_back(d); input.push_back(e); input.push_back(f);
@@ -257,6 +303,8 @@ int main()
 	{
 		cin >> entry;
 	}
+
+	GENERAL_SEARCH(problem);
 
 	return 0;
 }
