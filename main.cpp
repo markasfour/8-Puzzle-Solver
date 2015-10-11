@@ -3,20 +3,68 @@
 #include <list>
 using namespace std;
 
+typedef vector < vector<int> > VECTOR;
+
 //goal state for 8 puzzle
-const int GOAL[3][3] = { {1, 2, 3}, {4, 5, 6}, {7, 8, 0} };
+const VECTOR GOAL = { {1, 2, 3}, {4, 5, 6}, {7, 8, 0} };
 
 //node structure
 struct node
 {
-	int arr[3][3];
+	VECTOR x;
 	int uniform_cost;
 	int heuristic_cost;
 	bool goal;
+	node* child1;
+	node* child2; 
+	node* child3;
+
+	node(VECTOR a) {x = a;};
 };
 
+//search tree
+list <node> tree;
+
+VECTOR swap(VECTOR x, int a, int b, int c, int d)
+{
+	
+}
+
+//go up
+VECTOR operator_up(VECTOR x)
+{
+		
+}
+
+//go down
+VECTOR operator_down(VECTOR x)
+{
+	
+}
+
+//go left
+VECTOR operator_left(VECTOR x)
+{
+	
+}
+
+//go right
+VECTOR operator_right(VECTOR x)
+{
+	
+}
+
+//make tree
+list <node> make_tree (VECTOR x)
+{
+	if (x == GOAL)
+	{
+		//return;
+	}
+}
+
 //general searching algorithm 
-bool GENERAL_SEARCH(int arr[3][3], list <node> (*QUEUING)())
+bool GENERAL_SEARCH(VECTOR x, list <node> (*QUEUING)())
 {
 	list <node> tree; 
 	
@@ -46,8 +94,8 @@ int main()
 	if (entry == 1)
 	{
 		a = 1; b = 2; c = 3; d = 4;
-		e = 5; f = 6; g = 7; h = 8;
-		i = 0;
+		e = 5; f = 6; g = 7; h = 0;
+		i = 8;
 	}
 	else
 	{
@@ -67,13 +115,18 @@ int main()
 	input.push_back(d); input.push_back(e); input.push_back(f);
 	input.push_back(g); input.push_back(h); input.push_back(i);
 	
-	int arr[3][3];
+	cout << "HI" << endl;
+	VECTOR problem(3, vector<int> (3));
+	cout << problem.at(0).at(0) << endl;
 	int k = 0;
 	for (int i = 0; i < 3; i++)
 	{
+		cout << i << endl;
 		for (int j = 0; j < 3; j++)
 		{
-			arr[i][j] = input.at(k);
+			cout << j << endl;
+			problem.at(i).at(j) = input.at(k);
+			cout << problem.at(i).at(j) << endl;
 			k++;
 		}
 	}
