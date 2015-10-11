@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 int main()
@@ -30,6 +31,31 @@ int main()
 	cout << a << b << c << endl;
 	cout << d << e << f << endl;
 	cout << g << h << i << endl;
+	vector <int> input;
+	input.push_back(a); input.push_back(b); input.push_back(c);
+	input.push_back(d); input.push_back(e); input.push_back(f);
+	input.push_back(g); input.push_back(h); input.push_back(i);
+	
+	int arr[3][3];
+	int k = 0;
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			arr[i][j] = input.at(k);
+			k++;
+		}
+	}
+	
+	cout << "Enter your choice of algorithm" << endl;
+	cout << "1. Uniform Cost Search" << endl;
+	cout << "2. A* with the Misplaced Tile heuristic." << endl;
+	cout << "3. A* with the Manhattan distance heuristic." << endl;
+	entry = 0;
+	while (entry != 1 && entry != 2 && entry != 3)
+	{
+		cin >> entry;
+	}
 
 	return 0;
 }
