@@ -14,16 +14,29 @@ struct node
 	VECTOR x;
 	int uniform_cost;
 	int heuristic_cost;
-	bool goal;
-	node* child1;
-	node* child2; 
-	node* child3;
+	node* child1 = NULL;
+	node* child2 = NULL; 
+	node* child3 = NULL;
+	node* child4 = NULL;
 
-	node(VECTOR a) {x = a;};
+	node(VECTOR a)
+	{
+		x = a;
+		uniform_cost = 0;
+		heuristic_cost = 0;
+	};
+	node(VECTOR a, int uc, int hc) 
+	{
+		x = a;
+		uniform_cost = uc;
+		heuristic_cost = hc;
+	};
 };
 
 //search tree
-list <node> tree;
+list <node> TREE; 
+//visited nodes
+vector <node> VISITED;
 
 VECTOR swap(VECTOR x, int a, int b, int c, int d)
 {
@@ -137,21 +150,45 @@ VECTOR operator_right(VECTOR x)
 	return swap(x, a, b, a, b - 1);
 }
 
-//make tree
-list <node> make_tree (VECTOR x)
+bool already_visited (VECTOR x)
 {
-	if (x == GOAL)
+	for (int i = 0; i < VISITED.size(); i++)
 	{
-		//return;
+		if (VISITED.at(i).x == x)
+		{
+			return true;
+		}
 	}
+	return false;
+}
+
+//make tree
+void make_tree (node x)
+{
+	TREE.push_back(x.x);
+	VISITED.push_back(x.x);
+	if (x.x == GOAL)
+	{
+		return;
+	}
+
+	node n1 (operator_up(x.x), x.uniform_cost + 1, 0);
+	node n2 (operator_down(x.x), x.uniform_cost + 1, 0);
+	node n3 (operator_left(x.x), x.uniform_cost + 1, 0);
+	node n4 (operator_right(x.x), x.uniform_cost + 1, 0);
+	
+	if (n1.x != x.x && !already_visited(n1.x)) {x.child1 = &n1; make_tree(x.child1);}
+	if (n2.x != x.x && !already_visited(n2.x)) {x.child2 = &n2; make_tree(x.child2);}
+	if (n3.x != x.x && !already_visited(n3.x)) {x.child3 = &n3; make_tree(x.child3);}
+	if (n4.x != x.x && !already_visited(n4.x)) {x.child3 = &n4; make_tree(x.child4);}
 }
 
 //general searching algorithm 
 bool GENERAL_SEARCH(VECTOR x, list <node> (*QUEUING)())
 {
-	list <node> tree; 
+	make_tree(x);	
 	
-	if (tree.empty())
+	if (TREE.empty())
 	{
 		cout << "There is no solution";
 		return false;
