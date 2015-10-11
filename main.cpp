@@ -1,7 +1,38 @@
 #include <iostream>
 #include <vector>
+#include <list>
 using namespace std;
 
+//goal state for 8 puzzle
+const int GOAL[3][3] = { {1, 2, 3}, {4, 5, 6}, {7, 8, 0} };
+
+//node structure
+struct node
+{
+	int arr[3][3];
+	int uniform_cost;
+	int heuristic_cost;
+	bool goal;
+};
+
+//general searching algorithm 
+bool GENERAL_SEARCH(int arr[3][3], list <node> (*QUEUING)())
+{
+	list <node> tree; 
+	
+	if (tree.empty())
+	{
+		cout << "There is no solution";
+		return false;
+	}
+
+	while (true)
+	{
+		
+	}
+}
+
+//main function containing UI
 int main()
 {
 	cout << "Welcome to Mark Asfour's 8-puzzle solver." << endl;
