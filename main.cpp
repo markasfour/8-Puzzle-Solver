@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <list>
+#include <queue>
 using namespace std;
 
 typedef vector < vector<int> > VECTOR;
@@ -54,6 +54,8 @@ struct node
 vector <node> TREE; 
 //visited nodes
 vector <node> VISITED;
+//search queue
+queue <node> SEARCH;
 
 VECTOR swap(VECTOR x, int a, int b, int c, int d)
 {
@@ -180,37 +182,41 @@ bool already_visited (VECTOR x)
 	return false;
 }
 
+int LEVEL = 0;
 //make tree
 void make_tree (node x)
 {
 	TREE.push_back(x.x);
 	VISITED.push_back(x.x);
+	SEARCH.pop();
+	LEVEL++;
 	if (x.x == GOAL)
 	{
 		x.goal = true;
 		cout << "GOAL FOUND" << endl;
 		cout << "Uniform cost = " << x.uniform_cost << endl;
+		x.print();
 		return;
 	}
 
 	node n1 (operator_up(x.x), x.uniform_cost + 1, 0);
-	n1.print();
-	cout << endl;
 	node n2 (operator_down(x.x), x.uniform_cost + 1, 0);
-	n2.print();
-	cout << endl;
 	node n3 (operator_left(x.x), x.uniform_cost + 1, 0);
-	n3.print();
-	cout << endl;
 	node n4 (operator_right(x.x), x.uniform_cost + 1, 0);
-	n4.print();
-	cout << endl;
+	
+	if (n1.x != x.x && !already_visited(n1.x)) {x.child1 = &n1; SEARCH.push(n1);}
+	if (n2.x != x.x && !already_visited(n2.x)) {x.child2 = &n2; SEARCH.push(n2);}
+	if (n3.x != x.x && !already_visited(n3.x)) {x.child3 = &n3; SEARCH.push(n3);}
+	if (n4.x != x.x && !already_visited(n4.x)) {x.child3 = &n4; SEARCH.push(n4);}
 
-	if (n1.x != x.x && !already_visited(n1.x)) {x.child1 = &n1; make_tree(*x.child1);}
-	if (n2.x != x.x && !already_visited(n2.x)) {x.child2 = &n2; make_tree(*x.child2);}
-	if (n3.x != x.x && !already_visited(n3.x)) {x.child3 = &n3; make_tree(*x.child3);}
-	if (n4.x != x.x && !already_visited(n4.x)) {x.child3 = &n4; make_tree(*x.child4);}
-
+	if (SEARCH.empty())
+	{
+		return;
+	}
+	else 
+	{
+		make_tree(SEARCH.front());
+	}
 	cout << "END" << endl;
 }
 
@@ -229,7 +235,8 @@ void goal_check()
 //general searching algorithm 
 bool GENERAL_SEARCH(VECTOR x)//, list <node> (*QUEUING)())
 {
-	make_tree(node(x));	
+	SEARCH.push(x);
+	make_tree(node(x));
 	goal_check();
 
 	if (TREE.empty())
