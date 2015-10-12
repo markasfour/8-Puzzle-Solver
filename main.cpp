@@ -62,7 +62,6 @@ VECTOR swap(VECTOR x, int a, int b, int c, int d)
 	int z = x.at(c).at(d);
 	x.at(a).at(b) = z;
 	x.at(c).at(d) = 0;
-	cout << "SWAPPED " << z << endl;
 	return x;
 }
 
@@ -182,20 +181,23 @@ bool already_visited (VECTOR x)
 	return false;
 }
 
-int LEVEL = 0;
 //make tree
 void make_tree (node x)
 {
 	TREE.push_back(x.x);
 	VISITED.push_back(x.x);
 	SEARCH.pop();
-	LEVEL++;
+	//cout << x.uniform_cost << endl;
 	if (x.x == GOAL)
 	{
 		x.goal = true;
 		cout << "GOAL FOUND" << endl;
 		cout << "Uniform cost = " << x.uniform_cost << endl;
-		x.print();
+		//return;
+	}
+	if (x.uniform_cost >= 31)
+	{
+		cout << "No solution" << endl;
 		return;
 	}
 
@@ -217,7 +219,6 @@ void make_tree (node x)
 	{
 		make_tree(SEARCH.front());
 	}
-	cout << "END" << endl;
 }
 
 void goal_check()
