@@ -184,58 +184,32 @@ void make_tree (node x)
 	TREE.push_back(x.x);
 	VISITED.push_back(x.x);
 	SEARCH.pop();
-	//cout << x.uniform_cost << endl;
-	if (x.uniform_cost >= 31)
-	{
-		//cout << "No solution" << endl;
-		return;
-	}
 
 	node n1 (operator_down(x.x), x.uniform_cost + 1, 0);
 	node n2 (operator_up(x.x), x.uniform_cost + 1, 0);
 	node n3 (operator_left(x.x), x.uniform_cost + 1, 0);
 	node n4 (operator_right(x.x), x.uniform_cost + 1, 0);
 	
-	if (n1.x == GOAL)
+	
+	if (!already_visited(n1.x)) 
 	{
-		n1.goal = true;
-		cout << "GOAL FOUND" << endl;
-		cout << "Queue size= " << SEARCH.size() << endl << endl;
-
-		return;
+		SEARCH.push(n1); 
 	}
-	if (!already_visited(n1.x)) {SEARCH.push(n1); make_tree(n1);}
-	if (n2.x == GOAL)
+	if (!already_visited(n2.x)) 
 	{
-		n2.goal = true;
-		cout << "GOAL FOUND" << endl;
-		cout << "Queue size= " << SEARCH.size() << endl << endl;
-
-		return;
+		SEARCH.push(n2); 
 	}
-	if (!already_visited(n2.x)) {SEARCH.push(n2); make_tree(n2);}
-	if (n3.x == GOAL)
+	if (!already_visited(n3.x)) 
 	{
-		n3.goal = true;
-		cout << "GOAL FOUND" << endl;
-		cout << "Queue size= " << SEARCH.size() << endl << endl;
-
-		return;
+		SEARCH.push(n3); 
 	}
-	if (!already_visited(n3.x)) {SEARCH.push(n3); make_tree(n3);}
-	if (n4.x == GOAL)
+	if (!already_visited(n4.x)) 
 	{
-		n4.goal = true;
-		cout << "GOAL FOUND" << endl;
-		cout << "Queue size= " << SEARCH.size() << endl << endl;
-
-		return;
+		SEARCH.push(n4); 
 	}
-	if (!already_visited(n4.x)) {SEARCH.push(n4); make_tree(n4);}
 
 	if (SEARCH.empty())
 	{
-		cout << "no solution" << endl;
 		return;
 	}
 }
