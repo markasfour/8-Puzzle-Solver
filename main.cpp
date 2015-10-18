@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
-#include <stack>
 #include <unistd.h>
+#include "operators.h"
 using namespace std;
 
 typedef vector < vector<int> > VECTOR;
@@ -27,21 +27,26 @@ struct node
 	VECTOR x;
 	int uniform_cost;
 	int heuristic_cost;
-	bool goal = true;
+	int total;
+	node *child1;
+	node *child2;
+	node *child3;
+	node *child4;
+	node *parent;
 
-	node(VECTOR a)
+	node(VECTOR a) //constructor
 	{
 		x = a;
 		uniform_cost = 0;
 		heuristic_cost = 0;
 	};
-	node(VECTOR a, int uc, int hc) 
+	node(VECTOR a, int uc, int hc) //constructor
 	{
 		x = a;
 		uniform_cost = uc;
 		heuristic_cost = hc;
 	};
-	void print()
+	void print() //prints current puzzle
 	{
 		PRINT(x);	
 	}
@@ -52,119 +57,7 @@ vector <node> TREE;
 //visited nodes
 vector <node> VISITED;
 //search queue
-stack <node> SEARCH;
-
-VECTOR swap(VECTOR x, int a, int b, int c, int d)
-{
-	int z = x.at(c).at(d);
-	x.at(a).at(b) = z;
-	x.at(c).at(d) = 0;
-	return x;
-}
-
-//go up. Empty space cannot be on bottom row
-VECTOR operator_up(VECTOR x)
-{
-	for (int i = 0; i < 3; i++)
-	{
-		if (x.at(2).at(i) == 0)
-		{
-			return x;
-		}
-	}
-	//find 0
-	int a, b;
-	for (int i = 0; i < 2; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			if (x.at(i).at(j) == 0)
-			{
-				a = i;
-				b = j;
-			}
-		}
-	}
-	return swap(x, a, b, a + 1, b);
-}
-
-//go down. Empty space cannot be on top row
-VECTOR operator_down(VECTOR x)
-{
-	for (int i = 0; i < 3; i++)
-	{
-		if (x.at(0).at(i) == 0)
-		{
-			return x;
-		}
-	}
-	//find 0
-	int a, b;
-	for (int i = 1; i < 3; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			if (x.at(i).at(j) == 0)
-			{
-				a = i;
-				b = j;
-			}
-		}
-	}
-	return swap(x, a, b, a - 1, b);
-}
-
-//go left. Empty space cannot be on right row
-VECTOR operator_left(VECTOR x)
-{
-	for (int i = 0; i < 3; i++)
-	{
-		if (x.at(i).at(2) == 0)
-		{
-			return x;
-		}
-	}
-	//find 0
-	int a, b;
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 2; j++)
-		{
-			if (x.at(i).at(j) == 0)
-			{
-				a = i;
-				b = j;
-			}
-		}
-	}
-	return swap(x, a, b, a, b + 1);
-}
-
-//go right
-VECTOR operator_right(VECTOR x)
-{
-	for (int i = 0; i < 3; i++)
-	{
-		if (x.at(i).at(0) == 0)
-		{
-			return x;
-		}
-	}
-	//find 0
-	int a, b;
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 1; j < 3; j++)
-		{
-			if (x.at(i).at(j) == 0)
-			{
-				a = i;
-				b = j;
-			}
-		}
-	}
-	return swap(x, a, b, a, b - 1);
-}
+vector <node> SEARCH;
 
 bool already_visited (VECTOR x)
 {
@@ -294,6 +187,7 @@ int main()
 		}
 		cout << endl;
 	}
+
 	
 	cout << "Enter your choice of algorithm" << endl;
 	cout << "1. Uniform Cost Search" << endl;
