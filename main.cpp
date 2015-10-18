@@ -76,7 +76,7 @@ void make_tree (node x)
 {
 	TREE.push_back(x.x);
 	VISITED.push_back(x.x);
-	SEARCH.pop();
+	//SEARCH.pop();
 
 	node n1 (operator_down(x.x), x.uniform_cost + 1, 0);
 	node n2 (operator_up(x.x), x.uniform_cost + 1, 0);
@@ -86,19 +86,19 @@ void make_tree (node x)
 	
 	if (!already_visited(n1.x)) 
 	{
-		SEARCH.push(n1); 
+		//SEARCH.push(n1); 
 	}
 	if (!already_visited(n2.x)) 
 	{
-		SEARCH.push(n2); 
+		//SEARCH.push(n2); 
 	}
 	if (!already_visited(n3.x)) 
 	{
-		SEARCH.push(n3); 
+		//SEARCH.push(n3); 
 	}
 	if (!already_visited(n4.x)) 
 	{
-		SEARCH.push(n4); 
+		//SEARCH.push(n4); 
 	}
 
 	if (SEARCH.empty())
@@ -111,7 +111,7 @@ void goal_check()
 {
 	for (int i = 0; i < TREE.size(); i++)
 	{
-		if (TREE.at(i).goal)
+		//if (TREE.at(i).goal)
 		{
 			return;
 		}
@@ -122,7 +122,7 @@ void goal_check()
 //general searching algorithm 
 bool GENERAL_SEARCH(VECTOR x)//, list <node> (*QUEUING)())
 {
-	SEARCH.push(x);
+	SEARCH.push_back(x);
 	make_tree(node(x));
 	goal_check();
 
