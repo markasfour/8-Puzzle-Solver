@@ -72,16 +72,16 @@ VECTOR operator_left(VECTOR x)
 {
 	for (int i = 0; i < 3; i++)
 	{
-		if (x.at(2).at(i) == 0)
+		if (x.at(i).at(2) == 0)
 		{
 			return x;
 		}
 	}
 	//find 0
 	int a, b;
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 3; i++)
 	{
-		for (int j = 0; j < 3; j++)
+		for (int j = 0; j < 2; j++)
 		{
 			if (x.at(i).at(j) == 0)
 			{
@@ -90,6 +90,32 @@ VECTOR operator_left(VECTOR x)
 			}
 		}
 	}
-	return swap(x, a, b, a + 1, b);
+	return swap(x, a, b, a, b + 1);
+}
+
+//go right
+VECTOR operator_right(VECTOR x)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		if (x.at(i).at(0) == 0)
+		{
+			return x;
+		}
+	}
+	//find 0
+	int a, b;
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 1; j < 3; j++)
+		{
+			if (x.at(i).at(j) == 0)
+			{
+				a = i;
+				b = j;
+			}
+		}
+	}
+	return swap(x, a, b, a, b - 1);
 }
 #endif
