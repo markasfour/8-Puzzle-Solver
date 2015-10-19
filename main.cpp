@@ -4,6 +4,7 @@
 #include "node.h"
 #include "operators.h"
 #include "heuristics.h"
+#include "mergesort.h"
 using namespace std;
 
 //search tree
@@ -33,53 +34,70 @@ void search(VECTOR problem, string h)
 	VISITED.push_back(x);
 	SEARCH.push_back(x);
 
-	while(!SEARCH.empty())
+	while (!SEARCH.empty())
 	{
-		if(SEARCH.at(0).x == GOAL)
+		node curr = SEARCH.at(0); 
+		if (SEARCH.at(0).x == GOAL)
 		{
 			break;
 		}
 		else
 		{
 			SEARCH.erase(SEARCH.begin());
-			if(h == "")
-			{
-				node n1 (operator_down(x.x), x.uniform_cost + 1, 0);
-				node n2 (operator_up(x.x), x.uniform_cost + 1, 0);
-				node n3 (operator_left(x.x), x.uniform_cost + 1, 0);
-				node n4 (operator_right(x.x), x.uniform_cost + 1, 0);
-			}
-			else if(h == "misplaced")
-			{
-				node n1 (operator_down(x.x), x.uniform_cost + 1, misplaced_h(x.x));
-				node n2 (operator_up(x.x), x.uniform_cost + 1, misplaced_h(x.x));
-				node n3 (operator_left(x.x), x.uniform_cost + 1, misplaced_h(x.x));
-				node n4 (operator_right(x.x), x.uniform_cost + 1, misplaced_h(x.x));
-			}
-			else if(h == "manhattan")
-			{
-				node n1 (operator_down(x.x), x.uniform_cost + 1, manhattan_h(x.x));
-				node n2 (operator_up(x.x), x.uniform_cost + 1, manhattan_h(x.x));
-				node n3 (operator_left(x.x), x.uniform_cost + 1, manhattan_h(x.x));
-				node n4 (operator_right(x.x), x.uniform_cost + 1, manhattan_h(x.x));
-			}
 			
+			node n1 (operator_down(curr.x), curr.uniform_cost + 1);
+			node n2 (operator_up(curr.x), curr.uniform_cost + 1);
+			node n3 (operator_left(curr.x), curr.uniform_cost + 1);
+			node n4 (operator_right(curr.x), curr.uniform_cost + 1);
+			
+			if (h != "")
+			{
+				if (h == "misplaced")
+				{
+					n1.heuristic_cost = misplaced_h(n1.x);
+					n2.heuristic_cost = misplaced_h(n2.x);
+					n3.heuristic_cost = misplaced_h(n3.x);
+					n4.heuristic_cost = misplaced_h(n4.x);
+				}
+				if (h == "manhattan")
+				{
+					n1.heuristic_cost = manhattan_h(n1.x);
+					n2.heuristic_cost = manhattan_h(n2.x);
+					n3.heuristic_cost = manhattan_h(n3.x);
+					n4.heuristic_cost = manhattan_h(n4.x);
+				}
+			}
+
+			n1.total = n1.uniform_cost + n1.heuristic_cost;
+			n2.total = n2.uniform_cost + n2.heuristic_cost;
+			n3.total = n3.uniform_cost + n3.heuristic_cost;
+			n4.total = n4.uniform_cost + n4.heuristic_cost;
+
 			if (!already_visited(n1.x)) 
 			{
-				//SEARCH.push(n1); 
+				curr.child1 = &n1;
+				n1.parent = &curr;
+				SEARCH.push_back(n1); 
 			}
 			if (!already_visited(n2.x)) 
 			{
-				//SEARCH.push(n2); 
+				curr.child2 = &n2;
+				n2.parent = &curr;
+				SEARCH.push_back(n2); 
 			}
 			if (!already_visited(n3.x)) 
 			{
-				//SEARCH.push(n3); 
+				curr.child3 = &n3;
+				n3.parent = &curr;
+				SEARCH.push_back(n3); 
 			}
 			if (!already_visited(n4.x)) 
 			{
-				//SEARCH.push(n4); 
+				n4.child4 = &n4;
+				n4.parent = &curr;
+				SEARCH.push_back(n4); 
 			}
+			//merge sort here based off of total value		
 		}
 	}
 }
@@ -140,7 +158,6 @@ int main()
 		}
 		cout << endl;
 	}
-
 	
 	cout << "Enter your choice of algorithm" << endl;
 	cout << "1. Uniform Cost Search" << endl;
@@ -151,8 +168,12 @@ int main()
 	{
 		cin >> entry;
 	}
+	string H;
+	if (entry == 1) {H = "";}
+	if (entry == 2) {H = "misplaced";}
+	if (entry == 3) {H = "manhattan";}
 
-	search(problem, "");
+	search(problem, H);
 
 	return 0;
 }
