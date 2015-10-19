@@ -31,6 +31,7 @@ struct node
 	node *child3;
 	node *child4;
 	node *parent;
+	bool goal;
 
 	node(VECTOR a) //constructor
 	{
@@ -38,11 +39,11 @@ struct node
 		uniform_cost = 0;
 		heuristic_cost = 0;
 	};
-	node(VECTOR a, int uc, int hc) //constructor
+	node(VECTOR a, int uc) //constructor
 	{
 		x = a;
 		uniform_cost = uc;
-		heuristic_cost = hc;
+		heuristic_cost = 0;
 	};
 	void print() //prints current puzzle
 	{
