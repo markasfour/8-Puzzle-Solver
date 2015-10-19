@@ -26,38 +26,61 @@ bool already_visited (VECTOR x)
 }
 
 //make tree
-void make_tree (node x)
+void search(VECTOR problem, string h)
 {
-	TREE.push_back(x.x);
-	VISITED.push_back(x.x);
-	//SEARCH.pop();
+	node x(problem);
 
-	node n1 (operator_down(x.x), x.uniform_cost + 1, 0);
-	node n2 (operator_up(x.x), x.uniform_cost + 1, 0);
-	node n3 (operator_left(x.x), x.uniform_cost + 1, 0);
-	node n4 (operator_right(x.x), x.uniform_cost + 1, 0);
-	
-	
-	if (!already_visited(n1.x)) 
-	{
-		//SEARCH.push(n1); 
-	}
-	if (!already_visited(n2.x)) 
-	{
-		//SEARCH.push(n2); 
-	}
-	if (!already_visited(n3.x)) 
-	{
-		//SEARCH.push(n3); 
-	}
-	if (!already_visited(n4.x)) 
-	{
-		//SEARCH.push(n4); 
-	}
+	VISITED.push_back(x);
+	SEARCH.push_back(x);
 
-	if (SEARCH.empty())
+	while(!SEARCH.empty())
 	{
-		return;
+		if(SEARCH.at(0).x == GOAL)
+		{
+			break;
+		}
+		else
+		{
+			SEARCH.erase(SEARCH.begin());
+			if(h == "")
+			{
+				node n1 (operator_down(x.x), x.uniform_cost + 1, 0);
+				node n2 (operator_up(x.x), x.uniform_cost + 1, 0);
+				node n3 (operator_left(x.x), x.uniform_cost + 1, 0);
+				node n4 (operator_right(x.x), x.uniform_cost + 1, 0);
+			}
+			else if(h == "misplaced")
+			{
+				node n1 (operator_down(x.x), x.uniform_cost + 1, misplaced_h(x.x));
+				node n2 (operator_up(x.x), x.uniform_cost + 1, misplaced_h(x.x));
+				node n3 (operator_left(x.x), x.uniform_cost + 1, misplaced_h(x.x));
+				node n4 (operator_right(x.x), x.uniform_cost + 1, misplaced_h(x.x));
+			}
+			else if(h == "manhattan")
+			{
+				node n1 (operator_down(x.x), x.uniform_cost + 1, manhattan_h(x.x));
+				node n2 (operator_up(x.x), x.uniform_cost + 1, manhattan_h(x.x));
+				node n3 (operator_left(x.x), x.uniform_cost + 1, manhattan_h(x.x));
+				node n4 (operator_right(x.x), x.uniform_cost + 1, manhattan_h(x.x));
+			}
+			
+			if (!already_visited(n1.x)) 
+			{
+				//SEARCH.push(n1); 
+			}
+			if (!already_visited(n2.x)) 
+			{
+				//SEARCH.push(n2); 
+			}
+			if (!already_visited(n3.x)) 
+			{
+				//SEARCH.push(n3); 
+			}
+			if (!already_visited(n4.x)) 
+			{
+				//SEARCH.push(n4); 
+			}
+		}
 	}
 }
 
@@ -71,30 +94,6 @@ void goal_check()
 		}
 	}
 	TREE.clear();
-}
-
-//general searching algorithm 
-bool GENERAL_SEARCH(VECTOR x)//, list <node> (*QUEUING)())
-{
-	SEARCH.push_back(x);
-	make_tree(node(x));
-	goal_check();
-
-	if (TREE.empty())
-	{
-		cout << "There is no solution";
-		return false;
-	}
-	
-	for (int i = 0; i < TREE.size(); i++)
-	{
-		//TREE.at(i).print();
-		//cout << endl;
-	}
-	//while (true)
-	{
-		
-	}
 }
 
 //main function containing UI
@@ -153,7 +152,7 @@ int main()
 		cin >> entry;
 	}
 
-	GENERAL_SEARCH(problem);
+	search(problem, "");
 
 	return 0;
 }
