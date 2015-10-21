@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 #include <unistd.h>
 #include "node.h"
 #include "operators.h"
@@ -12,7 +13,7 @@ vector <node> TREE;
 //visited nodes
 vector <node> VISITED;
 //search queue
-vector <node> SEARCH;
+priority_queue <node, vector<node>, compare> SEARCH;
 
 bool already_visited (VECTOR x)
 {
@@ -32,19 +33,21 @@ void search(VECTOR problem, string h)
 	node x(problem);
 
 	VISITED.push_back(x);
-	SEARCH.push_back(x);
+	SEARCH.push(x);
 
 	while (!SEARCH.empty())
 	{
-		node curr = SEARCH.at(0); 
-		if (SEARCH.at(0).x == GOAL)
+		node curr = SEARCH.top(); 
+		if (SEARCH.top().x == GOAL)
 		{
+			cout << "GOAL" << endl;
 			break;
 		}
 		else
 		{
-			SEARCH.erase(SEARCH.begin());
-			
+			VISITED.push_back(SEARCH.top());
+			SEARCH.pop();
+						
 			node n1 (operator_down(curr.x), curr.uniform_cost + 1);
 			node n2 (operator_up(curr.x), curr.uniform_cost + 1);
 			node n3 (operator_left(curr.x), curr.uniform_cost + 1);
@@ -77,41 +80,28 @@ void search(VECTOR problem, string h)
 			{
 				curr.child1 = &n1;
 				n1.parent = &curr;
-				SEARCH.push_back(n1); 
+				SEARCH.push(n1); 
 			}
 			if (!already_visited(n2.x)) 
 			{
 				curr.child2 = &n2;
 				n2.parent = &curr;
-				SEARCH.push_back(n2); 
+				SEARCH.push(n2); 
 			}
 			if (!already_visited(n3.x)) 
 			{
 				curr.child3 = &n3;
 				n3.parent = &curr;
-				SEARCH.push_back(n3); 
+				SEARCH.push(n3); 
 			}
 			if (!already_visited(n4.x)) 
 			{
 				n4.child4 = &n4;
 				n4.parent = &curr;
-				SEARCH.push_back(n4); 
+				SEARCH.push(n4); 
 			}
-			//merge sort here based off of total value		
 		}
 	}
-}
-
-void goal_check()
-{
-	for (int i = 0; i < TREE.size(); i++)
-	{
-		//if (TREE.at(i).goal)
-		{
-			return;
-		}
-	}
-	TREE.clear();
 }
 
 //main function containing UI

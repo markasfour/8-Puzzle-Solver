@@ -45,11 +45,19 @@ struct node
 		uniform_cost = uc;
 		heuristic_cost = 0;
 	};
+	
 	void print() //prints current puzzle
 	{
 		PRINT(x);	
 	}
 };
 
+struct compare  
+{  
+	bool operator()(const node& l,const node& r)  
+	{  
+		return l.total > r.total;  
+	}  
+};  
 
 #endif
