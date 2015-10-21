@@ -27,6 +27,51 @@ bool already_visited (VECTOR x)
 	return false;
 }
 
+void print_success(node x)
+{
+	node curr = x;
+	cout << "1" << endl;
+	curr.print();
+	while (curr.parent != NULL)
+	{
+		curr.goal = true;
+		curr = *curr.parent;
+		curr.print();
+		cout << endl << "3" << endl;
+	}
+	cout << "2" << endl;
+	curr.print();
+	cout << endl;
+	while (curr.child1 != NULL && curr.child2 != NULL &&
+		   curr.child3 != NULL && curr.child4 != NULL)
+	{
+		if(curr.child1->goal)
+		{
+			curr = *curr.child1;
+			curr.print();
+			cout << endl;
+		}
+		if(curr.child2->goal)
+		{
+			curr = *curr.child2;
+			curr.print();
+			cout << endl;
+		}
+		if(curr.child3->goal)
+		{
+			curr = *curr.child3;
+			curr.print();
+			cout << endl;
+		}
+		if(curr.child4->goal)
+		{
+			curr = *curr.child4;
+			curr.print();
+			cout << endl;
+		}
+	}
+}
+
 //make tree
 void search(VECTOR problem, string h)
 {
@@ -41,6 +86,7 @@ void search(VECTOR problem, string h)
 		if (SEARCH.top().x == GOAL)
 		{
 			cout << "GOAL" << endl;
+			print_success(SEARCH.top());
 			break;
 		}
 		else
