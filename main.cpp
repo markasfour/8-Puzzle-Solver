@@ -30,48 +30,62 @@ bool already_visited (VECTOR x)
 void print_success(node x)
 {
 	node curr = x;
-	cout << "1" << endl;
+	cout << "SOLUTION" << endl;
 	curr.print();
+	cout << endl;
 	while (curr.parent != NULL)
 	{
 		curr.goal = true;
-		cout << "PARENT" << endl;
-		curr.parent->print();
 		curr = *curr.parent;
-		cout << "STORED" << endl;
-		curr.print();
-		cout << endl << "3" << endl;
 	}
-	cout << "2" << endl;
+	cout << "ROOT NODE" << endl;
 	curr.print();
 	cout << endl;
-	while (curr.child1 != NULL && curr.child2 != NULL &&
-		   curr.child3 != NULL && curr.child4 != NULL)
+	while (curr.child1 != NULL || curr.child2 != NULL ||
+		   curr.child3 != NULL || curr.child4 != NULL)
 	{
-		if(curr.child1->goal)
+		if (curr.child1 != NULL)
 		{
-			curr = *curr.child1;
-			curr.print();
-			cout << endl;
+			if(curr.child1->goal == true)
+			{
+				curr = *curr.child1;
+				curr.print();
+				cout << endl;
+				continue;
+			}
 		}
-		if(curr.child2->goal)
+		if (curr.child2 != NULL)
 		{
-			curr = *curr.child2;
-			curr.print();
-			cout << endl;
+			if(curr.child2->goal == true)
+			{
+				curr = *curr.child2;
+				curr.print();
+				cout << endl;
+				continue;
+			}
 		}
-		if(curr.child3->goal)
+		if (curr.child3 != NULL)
 		{
-			curr = *curr.child3;
-			curr.print();
-			cout << endl;
+			if(curr.child3->goal == true)
+			{
+				curr = *curr.child3;
+				curr.print();
+				cout << endl;
+				continue;
+			}
 		}
-		if(curr.child4->goal)
+		if (curr.child4 != NULL)
 		{
-			curr = *curr.child4;
-			curr.print();
-			cout << endl;
+			if(curr.child4->goal == true)
+			{
+				curr = *curr.child4;
+				curr.print();
+				cout << endl;
+				continue;
+			}
 		}
+		cout << "ERROR :( " << endl;
+		break;
 	}
 }
 
@@ -88,10 +102,6 @@ void search(VECTOR problem, string h)
 		node* curr = new node(SEARCH.top()); 
 		if (SEARCH.top().x == GOAL)
 		{
-			cout << "GOAL" << endl;
-			cout << "GOAL PARENT: " << endl;
-			SEARCH.top().parent->print();
-			cout << endl;
 			print_success(SEARCH.top());
 			break;
 		}
@@ -100,75 +110,58 @@ void search(VECTOR problem, string h)
 			VISITED.push_back(SEARCH.top());
 			SEARCH.pop();
 						
-			node n1 (operator_down(curr->x), curr->uniform_cost + 1);
-			node n2 (operator_up(curr->x), curr->uniform_cost + 1);
-			node n3 (operator_left(curr->x), curr->uniform_cost + 1);
-			node n4 (operator_right(curr->x), curr->uniform_cost + 1);
+			node* n1 = new node(operator_down(curr->x), curr->uniform_cost + 1);
+			node* n2 = new node (operator_up(curr->x), curr->uniform_cost + 1);
+			node* n3 = new node (operator_left(curr->x), curr->uniform_cost + 1);
+			node* n4 = new node (operator_right(curr->x), curr->uniform_cost + 1);
 			
 			if (h != "")
 			{
 				if (h == "misplaced")
 				{
-					n1.heuristic_cost = misplaced_h(n1.x);
-					n2.heuristic_cost = misplaced_h(n2.x);
-					n3.heuristic_cost = misplaced_h(n3.x);
-					n4.heuristic_cost = misplaced_h(n4.x);
+					n1->heuristic_cost = misplaced_h(n1->x);
+					n2->heuristic_cost = misplaced_h(n2->x);
+					n3->heuristic_cost = misplaced_h(n3->x);
+					n4->heuristic_cost = misplaced_h(n4->x);
 				}
 				if (h == "manhattan")
 				{
-					n1.heuristic_cost = manhattan_h(n1.x);
-					n2.heuristic_cost = manhattan_h(n2.x);
-					n3.heuristic_cost = manhattan_h(n3.x);
-					n4.heuristic_cost = manhattan_h(n4.x);
+					n1->heuristic_cost = manhattan_h(n1->x);
+					n2->heuristic_cost = manhattan_h(n2->x);
+					n3->heuristic_cost = manhattan_h(n3->x);
+					n4->heuristic_cost = manhattan_h(n4->x);
 				}
 			}
 
-			n1.total = n1.uniform_cost + n1.heuristic_cost;
-			n2.total = n2.uniform_cost + n2.heuristic_cost;
-			n3.total = n3.uniform_cost + n3.heuristic_cost;
-			n4.total = n4.uniform_cost + n4.heuristic_cost;
+			n1->total = n1->uniform_cost + n1->heuristic_cost;
+			n2->total = n2->uniform_cost + n2->heuristic_cost;
+			n3->total = n3->uniform_cost + n3->heuristic_cost;
+			n4->total = n4->uniform_cost + n4->heuristic_cost;
 
-			if (!already_visited(n1.x)) 
+			if (!already_visited(n1->x)) 
 			{
-				curr->child1 = &n1;
-				curr->child1->print();
-				cout << endl;
-				n1.parent = curr;
-				n1.parent->print();
-				cout << endl;
-				SEARCH.push(n1); 
+				curr->child1 = n1;
+				n1->parent = curr;
+				SEARCH.push(*n1); 
 			}
-			if (!already_visited(n2.x)) 
+			if (!already_visited(n2->x)) 
 			{
-				curr->child2 = &n2;
-				curr->child2->print();
-				cout << endl;
-				n2.parent = curr;
-				n2.parent->print();
-				cout << endl;
-				SEARCH.push(n2);  
+				curr->child2 = n2;
+				n2->parent = curr;
+				SEARCH.push(*n2);  
 			}
-			if (!already_visited(n3.x)) 
+			if (!already_visited(n3->x)) 
 			{
-				curr->child3 = &n3;
-				curr->child3->print();
-				cout << endl;
-				n3.parent = curr;
-				n3.parent->print();
-				cout << endl;
-				SEARCH.push(n3); 
+				curr->child3 = n3;
+				n3->parent = curr;
+				SEARCH.push(*n3); 
 			}
-			if (!already_visited(n4.x)) 
+			if (!already_visited(n4->x)) 
 			{
-				curr->child4 = &n4;
-				curr->child4->print();
-				cout << endl;
-				n4.parent = curr;
-				n4.parent->print();
-				cout << endl;
-				SEARCH.push(n4); 
+				curr->child4 = n4;
+				n4->parent = curr;
+				SEARCH.push(*n4); 
 			}
-
 		}
 	}
 }
