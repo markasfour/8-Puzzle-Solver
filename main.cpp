@@ -35,7 +35,10 @@ void print_success(node x)
 	while (curr.parent != NULL)
 	{
 		curr.goal = true;
+		cout << "PARENT" << endl;
+		curr.parent->print();
 		curr = *curr.parent;
+		cout << "STORED" << endl;
 		curr.print();
 		cout << endl << "3" << endl;
 	}
@@ -82,10 +85,13 @@ void search(VECTOR problem, string h)
 
 	while (!SEARCH.empty())
 	{
-		node curr = SEARCH.top(); 
+		node* curr = new node(SEARCH.top()); 
 		if (SEARCH.top().x == GOAL)
 		{
 			cout << "GOAL" << endl;
+			cout << "GOAL PARENT: " << endl;
+			SEARCH.top().parent->print();
+			cout << endl;
 			print_success(SEARCH.top());
 			break;
 		}
@@ -94,10 +100,10 @@ void search(VECTOR problem, string h)
 			VISITED.push_back(SEARCH.top());
 			SEARCH.pop();
 						
-			node n1 (operator_down(curr.x), curr.uniform_cost + 1);
-			node n2 (operator_up(curr.x), curr.uniform_cost + 1);
-			node n3 (operator_left(curr.x), curr.uniform_cost + 1);
-			node n4 (operator_right(curr.x), curr.uniform_cost + 1);
+			node n1 (operator_down(curr->x), curr->uniform_cost + 1);
+			node n2 (operator_up(curr->x), curr->uniform_cost + 1);
+			node n3 (operator_left(curr->x), curr->uniform_cost + 1);
+			node n4 (operator_right(curr->x), curr->uniform_cost + 1);
 			
 			if (h != "")
 			{
@@ -124,28 +130,45 @@ void search(VECTOR problem, string h)
 
 			if (!already_visited(n1.x)) 
 			{
-				curr.child1 = &n1;
-				n1.parent = &curr;
+				curr->child1 = &n1;
+				curr->child1->print();
+				cout << endl;
+				n1.parent = curr;
+				n1.parent->print();
+				cout << endl;
 				SEARCH.push(n1); 
 			}
 			if (!already_visited(n2.x)) 
 			{
-				curr.child2 = &n2;
-				n2.parent = &curr;
-				SEARCH.push(n2); 
+				curr->child2 = &n2;
+				curr->child2->print();
+				cout << endl;
+				n2.parent = curr;
+				n2.parent->print();
+				cout << endl;
+				SEARCH.push(n2);  
 			}
 			if (!already_visited(n3.x)) 
 			{
-				curr.child3 = &n3;
-				n3.parent = &curr;
+				curr->child3 = &n3;
+				curr->child3->print();
+				cout << endl;
+				n3.parent = curr;
+				n3.parent->print();
+				cout << endl;
 				SEARCH.push(n3); 
 			}
 			if (!already_visited(n4.x)) 
 			{
-				n4.child4 = &n4;
-				n4.parent = &curr;
+				curr->child4 = &n4;
+				curr->child4->print();
+				cout << endl;
+				n4.parent = curr;
+				n4.parent->print();
+				cout << endl;
 				SEARCH.push(n4); 
 			}
+
 		}
 	}
 }

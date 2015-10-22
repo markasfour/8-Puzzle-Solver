@@ -26,11 +26,11 @@ struct node
 	int uniform_cost;
 	int heuristic_cost;
 	int total;
-	node *child1;
-	node *child2;
-	node *child3;
-	node *child4;
-	node *parent;
+	node *child1 = NULL;
+	node *child2 = NULL;
+	node *child3 = NULL;
+	node *child4 = NULL;
+	node *parent = NULL;
 	bool goal;
 
 	node(VECTOR a) //constructor
