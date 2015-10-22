@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <stack>
 #include <unistd.h>
 #include "node.h"
 #include "operators.h"
@@ -33,59 +34,24 @@ void print_success(node x)
 	cout << "SOLUTION" << endl;
 	curr.print();
 	cout << endl;
+	stack <node> s;
+	s.push(curr);
 	while (curr.parent != NULL)
 	{
 		curr.goal = true;
 		curr = *curr.parent;
+		s.push(curr);
 	}
 	cout << "ROOT NODE" << endl;
-	curr.print();
+	s.top().print();
 	cout << endl;
-	while (curr.child1 != NULL || curr.child2 != NULL ||
-		   curr.child3 != NULL || curr.child4 != NULL)
+	s.pop();
+	while (!s.empty())
 	{
-		if (curr.child1 != NULL)
-		{
-			if(curr.child1->goal == true)
-			{
-				curr = *curr.child1;
-				curr.print();
-				cout << endl;
-				continue;
-			}
-		}
-		if (curr.child2 != NULL)
-		{
-			if(curr.child2->goal == true)
-			{
-				curr = *curr.child2;
-				curr.print();
-				cout << endl;
-				continue;
-			}
-		}
-		if (curr.child3 != NULL)
-		{
-			if(curr.child3->goal == true)
-			{
-				curr = *curr.child3;
-				curr.print();
-				cout << endl;
-				continue;
-			}
-		}
-		if (curr.child4 != NULL)
-		{
-			if(curr.child4->goal == true)
-			{
-				curr = *curr.child4;
-				curr.print();
-				cout << endl;
-				continue;
-			}
-		}
-		cout << "ERROR :( " << endl;
-		break;
+		cout << "Child" << endl;
+		s.top().print();
+		cout << endl;
+		s.pop();
 	}
 }
 
