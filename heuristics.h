@@ -44,6 +44,37 @@ void find(int a, int &p, int &q)
 	}
 }
 
+//void find(int a, int &p, int &q)
+//{
+	//find row
+//	cout << "FIND " << a << endl;
+//	if(a == 1 || a == 2 || a == 3)
+//	{
+//		p = 0;
+//	}
+//	else if(a == 4 || a == 5 || a == 6)
+//	{
+//		p = 1;
+//	}
+//	else
+//	{
+//		p = 2;
+//	}
+//	//find column
+//	if(a == 1 || a == 4 || a == 7)
+//	{
+//		q = 0;
+//	}
+//	else if(a == 2 || a == 5 || a == 8)
+//	{
+//		q = 1;
+//	}
+//	else
+//	{
+//		q = 2;
+//	}
+//}
+
 int manhattan_h(VECTOR x)
 {
 	int num = 0;
@@ -57,11 +88,12 @@ int manhattan_h(VECTOR x)
 			}
 			if(x.at(i).at(j) != GOAL.at(i).at(j))
 			{
-				int a, b;
+				int a = 0;
+				int b = 0;
 				find(x.at(i).at(j), a, b);
 				a = a - i;
 				b = b - j;
-				while(a != 0 && b != 0)
+				while(a != 0 || b != 0)
 				{
 					if(a > 0)
 					{

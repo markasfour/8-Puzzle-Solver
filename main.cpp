@@ -28,12 +28,9 @@ bool already_visited (VECTOR x)
 	return false;
 }
 
-void print_success(node x)
+void print_success(node x, string h)
 {
 	node curr = x;
-	cout << "SOLUTION" << endl;
-	curr.print();
-	cout << endl;
 	stack <node> s;
 	s.push(curr);
 	while (curr.parent != NULL)
@@ -48,35 +45,56 @@ void print_success(node x)
 	s.pop();
 	while (!s.empty())
 	{
-		cout << "Child" << endl;
+		cout << "CHILD" << endl;
 		s.top().print();
+		cout << "Cost to go to child = " << s.top().total << " where " << endl;
+		cout << "Uniform cost = " << s.top().uniform_cost << endl;
+		if (h != "")
+		{
+			cout << "Heuristic cost = " << s.top().heuristic_cost << endl;
+		}
 		cout << endl;
 		s.pop();
 	}
+	cout << "Goal has been reached" << endl;
 }
 
 //make tree
 void search(VECTOR problem, string h)
 {
 	node x(problem);
-
+	if (h != "")
+	{
+		cout << "Using " << h << "heuristic." << endl;
+	}
 	VISITED.push_back(x);
 	SEARCH.push(x);
-
+	
+	int w2 = 0;
 	while (!SEARCH.empty())
 	{
 		node* curr = new node(SEARCH.top()); 
 		if (SEARCH.top().x == GOAL)
 		{
-			print_success(SEARCH.top());
+			print_success(SEARCH.top(), h);
+			break;
+		}
+		else if (SEARCH.top().uniform_cost >= 31)
+		{
+			cout << "NO SOLUTION" << endl;
 			break;
 		}
 		else
 		{
 			VISITED.push_back(SEARCH.top());
+			int w = SEARCH.top().uniform_cost;
+			if (w > w2)
+			{
+				w2 = w;
+			}
 			SEARCH.pop();
 						
-			node* n1 = new node(operator_down(curr->x), curr->uniform_cost + 1);
+			node* n1 = new node (operator_down(curr->x), curr->uniform_cost + 1);
 			node* n2 = new node (operator_up(curr->x), curr->uniform_cost + 1);
 			node* n3 = new node (operator_left(curr->x), curr->uniform_cost + 1);
 			node* n4 = new node (operator_right(curr->x), curr->uniform_cost + 1);
@@ -186,6 +204,8 @@ int main()
 	{
 		cin >> entry;
 	}
+	cout << endl;
+
 	string H;
 	if (entry == 1) {H = "";}
 	if (entry == 2) {H = "misplaced";}
