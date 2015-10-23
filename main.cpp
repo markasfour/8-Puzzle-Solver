@@ -28,7 +28,7 @@ bool already_visited (VECTOR x)
 	return false;
 }
 
-void print_success(node x, string h)
+void print_success(node x, string h, int size, int depth, int expanded)
 {
 	node curr = x;
 	stack <node> s;
@@ -57,6 +57,11 @@ void print_success(node x, string h)
 		s.pop();
 	}
 	cout << "Goal has been reached" << endl;
+	cout << endl;
+	cout << "SUMMARY: " << endl;
+	cout << "A total of " << expanded << " nodes have been expanded." << endl;
+	cout << "The maximum size of the search queue was " << size << endl;
+	cout << "The depth of the solution was " << depth << endl;
 }
 
 //make tree
@@ -70,13 +75,16 @@ void search(VECTOR problem, string h)
 	VISITED.push_back(x);
 	SEARCH.push(x);
 	
-	int w2 = 0;
+	int depth = 0;
+	int size = 0;
+	int expanded = 0;
 	while (!SEARCH.empty())
 	{
 		node* curr = new node(SEARCH.top()); 
 		if (SEARCH.top().x == GOAL)
 		{
-			print_success(SEARCH.top(), h);
+			depth++;
+			print_success(SEARCH.top(), h, size, depth, expanded);
 			break;
 		}
 		else if (SEARCH.top().uniform_cost >= 31)
@@ -87,10 +95,15 @@ void search(VECTOR problem, string h)
 		else
 		{
 			VISITED.push_back(SEARCH.top());
-			int w = SEARCH.top().uniform_cost;
-			if (w > w2)
+			int depth_temp = SEARCH.top().uniform_cost;
+			if (depth_temp > depth)
 			{
-				w2 = w;
+				depth = depth_temp;
+			}
+			int size_temp = SEARCH.size();
+			if (size_temp > size)
+			{
+				size = size_temp;
 			}
 			SEARCH.pop();
 						
@@ -126,25 +139,29 @@ void search(VECTOR problem, string h)
 			{
 				curr->child1 = n1;
 				n1->parent = curr;
-				SEARCH.push(*n1); 
+				SEARCH.push(*n1);
+				expanded++;
 			}
 			if (!already_visited(n2->x)) 
 			{
 				curr->child2 = n2;
 				n2->parent = curr;
-				SEARCH.push(*n2);  
+				SEARCH.push(*n2);
+				expanded++;
 			}
 			if (!already_visited(n3->x)) 
 			{
 				curr->child3 = n3;
 				n3->parent = curr;
-				SEARCH.push(*n3); 
+				SEARCH.push(*n3);
+				expanded++;
 			}
 			if (!already_visited(n4->x)) 
 			{
 				curr->child4 = n4;
 				n4->parent = curr;
-				SEARCH.push(*n4); 
+				SEARCH.push(*n4);
+				expanded++;
 			}
 		}
 	}
