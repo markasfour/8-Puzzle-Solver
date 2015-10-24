@@ -83,7 +83,6 @@ void search(VECTOR problem, string h)
 		node* curr = new node(SEARCH.top()); 
 		if (SEARCH.top().x == GOAL)
 		{
-			depth++;
 			print_success(SEARCH.top(), h, size, depth, expanded);
 			break;
 		}
