@@ -34,20 +34,20 @@ bool already_visited (VECTOR x) {
 void print_success(node x, string h, int size, int depth, int expanded) {
 	node curr = x;
 	stack <node> s;
-	s.push(curr);							//add successful node
+	s.push(curr);					//add successful node
 	while (curr.parent != NULL) {			//go up all parents until at root
 		curr = *curr.parent;
-		s.push(curr);						//add each parent to stack
+		s.push(curr);				//add each parent to stack
 	}
 	cout << "ROOT NODE" << endl;
 	cout << "Expanding state" << endl;
 	s.top().print();
 	cout << endl;
 	s.pop();
-	while (!s.empty()) {					//print the contents of the stack
+	while (!s.empty()) {				//print the contents of the stack
 		cout << "The best state to expand with a g(n) = ";
-		cout << s.top().heuristic_cost;
-		cout << " and h(n) = " << s.top().uniform_cost << " is..." << endl;
+		cout << s.top().uniform_cost;
+		cout << " and h(n) = " << s.top().heuristic_cost << " is..." << endl;
 		s.top().print();
 		cout << "Expanding this node ..." << endl;
 		cout << endl;
@@ -55,8 +55,10 @@ void print_success(node x, string h, int size, int depth, int expanded) {
 	}
 	cout << "Goal!!" << endl;
 	cout << endl;
-	cout << "To solve this problem the search algorithm expanded a total of " << expanded << " nodes."<< endl;
-	cout << "The maximum number of nodes in the queue at any one time was " << size << "." << endl;
+	cout << "To solve this problem the search algorithm expanded a total of ";
+	cout << expanded << " nodes."<< endl;
+	cout << "The maximum number of nodes in the queue at any one time was ";
+	cout << size << "." << endl;
 	cout << "The depth of the goal node was " << depth << endl;
 }
 
@@ -69,42 +71,35 @@ void search(VECTOR problem, string h) {
 		cout << "Using " << h << " heuristic." << endl;
 	}
 	VISITED.push_back(x);					//add start node to visited
-	SEARCH.push(x);							//add to search tree
-	
+	SEARCH.push(x);						//add to search tree
+
 	int depth = 0;
 	int size = 0;
 	int expanded = 0;
 	while (!SEARCH.empty()) {				//loop while still can search
 		node* curr = new node(SEARCH.top()); 
-		if (SEARCH.top().x == GOAL) {
+		if (SEARCH.top().x == GOAL) {			//if solution is found, print trace and end
+			depth = SEARCH.top().uniform_cost;	//record depth. Depth is equivalent to the uniform cost of the solution
 			print_success(SEARCH.top(), h, size, depth, expanded);
 			break;
 		}
-		/* diameter of problem = 31
-		 * if no solution found at a depth of 31, no solution
-		 */
-		else if (SEARCH.top().uniform_cost > 31) {
-			cout << "NO SOLUTION" << endl;
-			break;
-		}
 		else {
-			VISITED.push_back(SEARCH.top());
-			int depth_temp = SEARCH.top().uniform_cost;
-			if (depth_temp > depth) {		//record max depth
-				cout << "DEPTH = " << depth_temp << endl;
-				depth = depth_temp;
-			}
+			VISITED.push_back(SEARCH.top());	//add node to visited
 			int size_temp = SEARCH.size();
 			if (size_temp > size) {			//record max size of queue
 				size = size_temp;
 			}
 			SEARCH.pop();
-						
+			
+			/* Expand the node
+			 * If an operation is impossible, the same node will be returned
+			 * If a repeated state created, it will be accounted for later
+			 */
+			expanded++;
 			node* n1 = new node (operator_down(curr->x), curr->uniform_cost + 1);
 			node* n2 = new node (operator_up(curr->x), curr->uniform_cost + 1);
 			node* n3 = new node (operator_left(curr->x), curr->uniform_cost + 1);
 			node* n4 = new node (operator_right(curr->x), curr->uniform_cost + 1);
-			
 			if (h != "") {
 				if (h == "misplaced") {		//use misplaced tile heuristic
 					n1->heuristic_cost = misplaced_h(n1->x);
@@ -125,31 +120,30 @@ void search(VECTOR problem, string h) {
 			n3->total = n3->uniform_cost + n3->heuristic_cost;
 			n4->total = n4->uniform_cost + n4->heuristic_cost;
 
-			if (!already_visited(n1->x)) {	//if not visited, add to search
+			if (!already_visited(n1->x)) {		//if not visited, add to search
 				curr->child1 = n1;
 				n1->parent = curr;
 				SEARCH.push(*n1);
-				expanded++;					
 			}
-			if (!already_visited(n2->x)) {	//if not visited, add to search
+			if (!already_visited(n2->x)) {		//if not visited, add to search
 				curr->child2 = n2;
 				n2->parent = curr;
 				SEARCH.push(*n2);
-				expanded++;
 			}
-			if (!already_visited(n3->x)) {	//if not visited, add to search
+			if (!already_visited(n3->x)) {		//if not visited, add to search
 				curr->child3 = n3;
 				n3->parent = curr;
 				SEARCH.push(*n3);
-				expanded++;
 			}
-			if (!already_visited(n4->x)) {	//if not visited, add to search
+			if (!already_visited(n4->x)) {		//if not visited, add to search
 				curr->child4 = n4;
 				n4->parent = curr;
 				SEARCH.push(*n4);
-				expanded++;
 			}
 		}
+	}
+	if (SEARCH.empty()) {		//print no solution if entire queue emptied
+		cout << "NO SOLUTION" << endl;
 	}
 }
 

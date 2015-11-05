@@ -17,7 +17,7 @@ int misplaced_h(VECTOR x) {
 	for(int i = 0; i < 3; i++) {					//iterate through rows
 		for(int j = 0; j < 3; j++) {				//iterate through columns
 			if(x.at(i).at(j) == 0) {
-				continue;							//skip the blank
+				continue;				//skip the blank
 			}
 			if(x.at(i).at(j) != GOAL.at(i).at(j)) { //check match
 				num++;
@@ -36,7 +36,7 @@ void find(int a, int &p, int &q) {
 			if(GOAL.at(i).at(j) == a) {
 				p = i;
 				q = j;
-				return;								//values altered by ref
+				return;					//values altered by ref
 			}
 		}
 	}
@@ -51,15 +51,15 @@ int manhattan_h(VECTOR x) {
 	for(int i = 0; i < 3; i++) {					//iterate through rows
 		for(int j = 0; j < 3; j++) {				//iterate through columns
 			if(x.at(i).at(j) == 0) {
-				continue;							//skip space
+				continue;				//skip space
 			}
 			if(x.at(i).at(j) != GOAL.at(i).at(j)) { //if not matched with goal
 				int a = 0;
 				int b = 0;
-				find(x.at(i).at(j), a, b);			//right right location
+				find(x.at(i).at(j), a, b);		//right right location
 				a = a - i;
 				b = b - j;
-				while(a != 0 || b != 0) {			//calculate distance
+				while(a != 0 || b != 0) {		//calculate distance
 					if(a > 0) {
 						a--;
 						num++;

@@ -18,20 +18,20 @@ void PRINT(VECTOR x) {
 	}
 }
 
-// node structure
+// node structure that hold puzzles, costs, and pointers to childen/parents
 struct node
 {
 	VECTOR x;
 	int uniform_cost;
 	int heuristic_cost;
-	int total;						// total = uniform + heuristic
+	int total;				// total = uniform + heuristic
 	node *child1 = NULL;
 	node *child2 = NULL;
 	node *child3 = NULL;
 	node *child4 = NULL;
 	node *parent = NULL;
 
-	node(VECTOR a) {				//constructor
+	node(VECTOR a) {			//constructor
 		x = a;
 		uniform_cost = 0;
 		heuristic_cost = 0;
@@ -52,7 +52,7 @@ struct node
 		child4 = a.child4;
 		parent = a.parent;
 	}
-	void operator=(const node &a) {	//equal overload
+	void operator=(const node &a) {		//equal overload
 		x = a.x;
 		uniform_cost = a.uniform_cost;
 		heuristic_cost = a.heuristic_cost;
@@ -63,7 +63,7 @@ struct node
 		child4 = a.child4;
 		parent = a.parent;
 	}
-	void print() {					//prints current puzzle
+	void print() {				//prints current puzzle
 		PRINT(x);	
 	}
 };
