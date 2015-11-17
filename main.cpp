@@ -44,7 +44,7 @@ void print_success(node x, string h, int size, int depth, int expanded) {
 	s.top().print();
 	cout << endl;
 	s.pop();
-	while (!s.empty()) {				//print the contents of the stack
+	while (s.size() > 1) {				//print the contents of the stack
 		cout << "The best state to expand with a g(n) = ";
 		cout << s.top().uniform_cost;
 		cout << " and h(n) = " << s.top().heuristic_cost << " is..." << endl;
